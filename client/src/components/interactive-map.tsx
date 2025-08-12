@@ -7,8 +7,7 @@ export function InteractiveMap() {
     <section className="py-16 bg-space-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h3 className="text-3xl md:text-4xl font-bold mb-4" data-testid="map-section-title">Global Space Data Map</h3>
-          <p className="text-gray-400 text-lg" data-testid="map-section-subtitle">Interactive visualization of Earth and space object data</p>
+          <h3 className="text-3xl md:text-4xl font-bold mb-4" data-testid="map-section-title">NASA Data Visualization</h3>
         </div>
 
         <Card className="glass-effect border-border/40">

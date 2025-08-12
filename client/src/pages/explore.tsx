@@ -12,10 +12,8 @@ import { nasaApi } from "@/lib/nasa-api";
 export default function Explore() {
   const [apodDate, setApodDate] = useState("");
   const [selectedRover, setSelectedRover] = useState("");
-  const [selectedCamera, setSelectedCamera] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [earthDate, setEarthDate] = useState("");
+  const [selectedCamera, setSelectedCamera] = useState("all");
+
 
   const { data: apod, isLoading: apodLoading, refetch: refetchApod } = useQuery({
     queryKey: ["/api/apod", apodDate],
@@ -25,15 +23,11 @@ export default function Explore() {
 
   const { data: marsPhotos, isLoading: marsLoading, refetch: refetchMars } = useQuery({
     queryKey: ["/api/mars/photos", selectedRover, selectedCamera],
-    queryFn: () => nasaApi.getMarsPhotos(selectedRover, undefined, selectedCamera),
+    queryFn: () => nasaApi.getMarsPhotos(selectedRover, undefined, selectedCamera === "all" ? undefined : selectedCamera),
     enabled: false,
   });
 
-  const { data: earthAssets, isLoading: earthLoading, refetch: refetchEarth } = useQuery({
-    queryKey: ["/api/earth", latitude, longitude, earthDate],
-    queryFn: () => nasaApi.getEarthAssets(parseFloat(latitude), parseFloat(longitude), earthDate),
-    enabled: false,
-  });
+
 
   const handleApodSearch = () => {
     if (apodDate) refetchApod();
@@ -43,9 +37,7 @@ export default function Explore() {
     refetchMars();
   };
 
-  const handleEarthSearch = () => {
-    if (latitude && longitude) refetchEarth();
-  };
+
 
   return (
     <div className="min-h-screen pt-20 pb-16 bg-gradient-to-b from-space-950 to-space-900">
@@ -55,7 +47,7 @@ export default function Explore() {
           <p className="text-gray-400 text-lg" data-testid="explore-subtitle">Dive deep into NASA's data with advanced search and filtering</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
           {/* APOD Search */}
           <Card className="glass-effect border-border/40 hover:bg-opacity-80 transition-all duration-300">
             <CardHeader>
@@ -120,6 +112,7 @@ export default function Explore() {
                     <SelectValue placeholder="Select camera" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="all">All Cameras</SelectItem>
                     <SelectItem value="MAST">MAST</SelectItem>
                     <SelectItem value="NAVCAM">NAVCAM</SelectItem>
                     <SelectItem value="FHAZ">FHAZ</SelectItem>
@@ -139,60 +132,7 @@ export default function Explore() {
             </CardContent>
           </Card>
 
-          {/* Earth Data Explorer */}
-          <Card className="glass-effect border-border/40 hover:bg-opacity-80 transition-all duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center text-nebula-400">
-                <Satellite className="mr-2 h-5 w-5" />
-                Earth Data Explorer
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label className="text-gray-300">Latitude</Label>
-                <Input
-                  type="number"
-                  step="0.1"
-                  placeholder="e.g. 40.7128"
-                  value={latitude}
-                  onChange={(e) => setLatitude(e.target.value)}
-                  className="bg-space-900 border-gray-600 text-white focus:border-cosmic-500"
-                  data-testid="input-latitude"
-                />
-              </div>
-              <div>
-                <Label className="text-gray-300">Longitude</Label>
-                <Input
-                  type="number"
-                  step="0.1"
-                  placeholder="e.g. -74.0060"
-                  value={longitude}
-                  onChange={(e) => setLongitude(e.target.value)}
-                  className="bg-space-900 border-gray-600 text-white focus:border-cosmic-500"
-                  data-testid="input-longitude"
-                />
-              </div>
-              <div>
-                <Label className="text-gray-300">Date (Optional)</Label>
-                <Input
-                  type="date"
-                  value={earthDate}
-                  onChange={(e) => setEarthDate(e.target.value)}
-                  className="bg-space-900 border-gray-600 text-white focus:border-cosmic-500"
-                  data-testid="input-earth-date"
-                />
-              </div>
-              <Button 
-                onClick={handleEarthSearch}
-                className="w-full bg-nebula-500 hover:bg-nebula-600 text-white"
-                disabled={!latitude || !longitude || earthLoading}
-                data-testid="button-search-earth"
-              >
-                <Satellite className="mr-2 h-4 w-4" />
-                {earthLoading ? "Loading..." : "Get Earth Data"}
-              </Button>
-            </CardContent>
-          </Card>
+
         </div>
 
         {/* Results Section */}
@@ -246,32 +186,7 @@ export default function Explore() {
             </Card>
           )}
 
-          {/* Earth Assets Results */}
-          {earthAssets && earthAssets.length > 0 && (
-            <Card className="glass-effect border-border/40">
-              <CardHeader>
-                <CardTitle className="text-nebula-400" data-testid="earth-results-title">
-                  Earth Assets ({earthAssets.length} found)
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {earthAssets.map((asset) => (
-                    <div key={asset.id} className="space-y-2" data-testid={`earth-asset-${asset.id}`}>
-                      <div className="aspect-square rounded-lg overflow-hidden">
-                        <img 
-                          src={asset.url} 
-                          alt={`Earth asset from ${asset.date}`}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                      <p className="text-sm text-gray-400">{asset.date}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+
         </div>
       </div>
     </div>

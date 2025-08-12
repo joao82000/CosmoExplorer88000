@@ -66,9 +66,9 @@ export const marsRoverPhotoSchema = z.object({
     landing_date: z.string(),
     launch_date: z.string(),
     status: z.string(),
-    max_sol: z.number(),
-    max_date: z.string(),
-    total_photos: z.number(),
+    max_sol: z.number().optional(),
+    max_date: z.string().optional(),
+    total_photos: z.number().optional(),
   }),
 });
 

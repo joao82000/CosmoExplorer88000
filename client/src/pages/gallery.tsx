@@ -11,11 +11,11 @@ import { MarsRoverPhoto } from "@shared/schema";
 
 export default function Gallery() {
   const [selectedRover, setSelectedRover] = useState("perseverance");
-  const [selectedCamera, setSelectedCamera] = useState("");
+  const [selectedCamera, setSelectedCamera] = useState("all");
 
   const { data: photos, isLoading, error } = useQuery({
     queryKey: ["/api/mars/photos", selectedRover, selectedCamera],
-    queryFn: () => nasaApi.getMarsPhotos(selectedRover, undefined, selectedCamera),
+    queryFn: () => nasaApi.getMarsPhotos(selectedRover, undefined, selectedCamera === "all" ? undefined : selectedCamera),
   });
 
   const rovers = [
@@ -26,7 +26,7 @@ export default function Gallery() {
   ];
 
   const cameras = [
-    { value: "", label: "All Cameras" },
+    { value: "all", label: "All Cameras" },
     { value: "MAST", label: "Mast Camera" },
     { value: "NAVCAM", label: "Navigation Camera" },
     { value: "FHAZ", label: "Front Hazard Avoidance Camera" },

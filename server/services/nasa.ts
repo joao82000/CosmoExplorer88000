@@ -49,7 +49,7 @@ export class NASAService {
       
       const params = new URLSearchParams({
         api_key: this.apiKey,
-        sol: sol ? sol.toString() : '1000',
+        sol: sol ? sol.toString() : '100',
         ...(camera && { camera }),
       });
 

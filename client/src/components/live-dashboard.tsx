@@ -252,12 +252,19 @@ export function LiveDashboard() {
                       <p className="font-semibold" data-testid="mars-date">{marsPhoto.earth_date}</p>
                     </div>
                   </div>
-                  <Link href="/gallery">
-                    <Button className="w-full bg-cosmic-600 hover:bg-cosmic-700 text-white" data-testid="button-browse-gallery">
-                      <Camera className="mr-2 h-4 w-4" />
-                      Browse Gallery
-                    </Button>
-                  </Link>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/gallery">
+                      <Button className="w-full bg-cosmic-600 hover:bg-cosmic-700 text-white" data-testid="button-browse-gallery">
+                        <Camera className="mr-2 h-4 w-4" />
+                        Gallery
+                      </Button>
+                    </Link>
+                    <Link href="/explore">
+                      <Button variant="outline" className="w-full border-nebula-500 text-nebula-400 hover:bg-nebula-500 hover:text-white" data-testid="button-explore-mars">
+                        Explore
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
               )}
             </CardContent>
