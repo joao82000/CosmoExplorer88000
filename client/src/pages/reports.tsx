@@ -58,6 +58,24 @@ export default function Reports() {
       const pdf = new jsPDF();
       let yPosition = 20;
       
+      // Helper function to load and add images
+      const loadImageAsBase64 = (url: string): Promise<string> => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.crossOrigin = 'anonymous';
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx?.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/jpeg', 0.7));
+          };
+          img.onerror = () => reject('Failed to load image');
+          img.src = url;
+        });
+      };
+      
       // Add title
       pdf.setFontSize(18);
       pdf.text(reportTitle, 20, yPosition);
@@ -78,16 +96,28 @@ export default function Reports() {
         pdf.text(`Date: ${apod.date}`, 20, yPosition);
         yPosition += 7;
         pdf.text(`Title: ${apod.title}`, 20, yPosition);
-        yPosition += 7;
+        yPosition += 15;
+        
+        // Try to add APOD image
+        try {
+          const imageData = await loadImageAsBase64(apod.url);
+          const imgWidth = 80;
+          const imgHeight = 60;
+          pdf.addImage(imageData, 'JPEG', 20, yPosition, imgWidth, imgHeight);
+          yPosition += imgHeight + 10;
+        } catch (error) {
+          console.error('Failed to load APOD image:', error);
+          yPosition += 5;
+        }
         
         // Split long description into multiple lines
         const splitDescription = pdf.splitTextToSize(`Description: ${apod.explanation}`, 170);
         pdf.text(splitDescription, 20, yPosition);
-        yPosition += splitDescription.length * 5 + 10;
+        yPosition += splitDescription.length * 5 + 15;
       }
       
       if (includeEpic && epic) {
-        if (yPosition > 250) {
+        if (yPosition > 200) {
           pdf.addPage();
           yPosition = 20;
         }
@@ -99,6 +129,19 @@ export default function Reports() {
         yPosition += 7;
         pdf.text(`Coordinates: ${epic.centroid_coordinates.lat}°N, ${epic.centroid_coordinates.lon}°W`, 20, yPosition);
         yPosition += 15;
+        
+        // Try to add EPIC image
+        try {
+          const epicImageUrl = `https://api.nasa.gov/EPIC/archive/natural/${epic.date.split(' ')[0].replace(/-/g, '/')}/png/${epic.image}.png?api_key=baGVDjbzqV5wDbt1mcOfgYbgoe5pWso3X5N8mO0r`;
+          const imageData = await loadImageAsBase64(epicImageUrl);
+          const imgWidth = 80;
+          const imgHeight = 80;
+          pdf.addImage(imageData, 'PNG', 20, yPosition, imgWidth, imgHeight);
+          yPosition += imgHeight + 15;
+        } catch (error) {
+          console.error('Failed to load EPIC image:', error);
+          yPosition += 15;
+        }
       }
       
       if (includeNeo && neos) {
