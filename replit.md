@@ -8,6 +8,14 @@ NASA Space Data Explorer is a React-based web application that provides real-tim
 
 Preferred communication style: Simple, everyday language.
 
+## Development Team
+
+**NASA App Challenge 2025 Submission**
+- João Paulo Brusco
+- Henrique Nardi  
+- Enzo Ramos
+- Guilherme Pereira
+
 ## System Architecture
 
 ### Frontend Architecture
