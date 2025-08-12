@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { apodSchema, epicImageSchema, marsRoverPhotoSchema, nearEarthObjectSchema, earthAssetSchema } from '@shared/schema';
 
-const NASA_API_KEY = process.env.NASA_API_KEY || 'DEMO_KEY';
+const NASA_API_KEY = process.env.NASA_API_KEY || 'baGVDjbzqV5wDbt1mcOfgYbgoe5pWso3X5N8mO0r';
 const NASA_BASE_URL = 'https://api.nasa.gov';
 
 export class NASAService {
@@ -21,18 +21,8 @@ export class NASAService {
       const response = await axios.get(`${NASA_BASE_URL}/planetary/apod?${params}`);
       return apodSchema.parse(response.data);
     } catch (error) {
-      console.error('Error fetching APOD, using fallback data:', error);
-      // Fallback with real NASA APOD structure
-      const fallbackDate = date || new Date().toISOString().split('T')[0];
-      return apodSchema.parse({
-        date: fallbackDate,
-        explanation: "The Milky Way galaxy stretches across this nighttime panoramic view captured from Earth's southern hemisphere. This mosaic of the galactic center region shows the dense star clouds, dark dust lanes, and glowing nebulae that make our galaxy's central region so spectacular. The image reveals countless stars, star-forming regions, and the supermassive black hole at our galaxy's heart, hidden behind layers of cosmic dust.",
-        media_type: "image",
-        service_version: "v1",
-        title: "The Milky Way Galaxy from Earth",
-        url: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=800",
-        hdurl: "https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1280"
-      });
+      console.error('Error fetching APOD:', error);
+      throw new Error('Failed to fetch Astronomy Picture of the Day');
     }
   }
 

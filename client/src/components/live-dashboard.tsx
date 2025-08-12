@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Image, Globe, Haze, Camera, ExternalLink, ArrowRight } from "lucide-react";
+import { Image, Globe, Haze, ExternalLink, ArrowRight } from "lucide-react";
 import { nasaApi } from "@/lib/nasa-api";
-import { Link } from "wouter";
+
 
 export function LiveDashboard() {
   const { data: apod, isLoading: apodLoading, error: apodError } = useQuery({
@@ -22,10 +22,7 @@ export function LiveDashboard() {
     queryFn: () => nasaApi.getNearEarthObjects(),
   });
 
-  const { data: marsPhoto, isLoading: marsLoading, error: marsError } = useQuery({
-    queryKey: ["/api/mars/latest"],
-    queryFn: () => nasaApi.getLatestMarsPhoto(),
-  });
+
 
   return (
     <section id="dashboard" className="py-16 bg-space-950">
@@ -116,7 +113,7 @@ export function LiveDashboard() {
                 <div>
                   <div className="aspect-square rounded-lg overflow-hidden mb-4">
                     <img 
-                      src={`https://api.nasa.gov/EPIC/archive/natural/${epic.date.split(' ')[0].replace(/-/g, '/')}/png/${epic.image}.png?api_key=DEMO_KEY`}
+                      src={`https://api.nasa.gov/EPIC/archive/natural/${epic.date.split(' ')[0].replace(/-/g, '/')}/png/${epic.image}.png?api_key=baGVDjbzqV5wDbt1mcOfgYbgoe5pWso3X5N8mO0r`}
                       alt="EPIC Earth view"
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-500 animate-float"
                       data-testid="epic-image"
@@ -140,7 +137,7 @@ export function LiveDashboard() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-8">
           {/* Near Earth Objects */}
           <Card className="glass-effect border-border/40 hover:bg-opacity-80 transition-all duration-300 animate-fade-in">
             <CardHeader>
@@ -198,77 +195,7 @@ export function LiveDashboard() {
             </CardContent>
           </Card>
 
-          {/* Mars Rover Photos */}
-          <Card className="glass-effect border-border/40 hover:bg-opacity-80 transition-all duration-300 animate-fade-in">
-            <CardHeader>
-              <CardTitle className="flex items-center text-nebula-400">
-                <Camera className="mr-2 h-5 w-5" />
-                Latest Mars Rover Photo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {marsLoading && (
-                <div className="space-y-4">
-                  <Skeleton className="aspect-video w-full" />
-                  <div className="grid grid-cols-2 gap-4">
-                    <Skeleton className="h-12" />
-                    <Skeleton className="h-12" />
-                    <Skeleton className="h-12" />
-                    <Skeleton className="h-12" />
-                  </div>
-                  <Skeleton className="h-10 w-full" />
-                </div>
-              )}
-              {marsError && (
-                <div className="text-center py-8 text-red-400" data-testid="mars-error">
-                  Failed to load Mars photo
-                </div>
-              )}
-              {marsPhoto && (
-                <div>
-                  <div className="aspect-video rounded-lg overflow-hidden mb-4">
-                    <img 
-                      src={marsPhoto.img_src} 
-                      alt="Mars rover photo"
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                      data-testid="mars-image"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 text-sm mb-4">
-                    <div>
-                      <span className="text-gray-400">Rover:</span>
-                      <p className="font-semibold" data-testid="mars-rover">{marsPhoto.rover.name}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-400">Sol:</span>
-                      <p className="font-semibold" data-testid="mars-sol">{marsPhoto.sol}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-400">Camera:</span>
-                      <p className="font-semibold" data-testid="mars-camera">{marsPhoto.camera.name}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-400">Date:</span>
-                      <p className="font-semibold" data-testid="mars-date">{marsPhoto.earth_date}</p>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/gallery">
-                      <Button className="w-full bg-cosmic-600 hover:bg-cosmic-700 text-white" data-testid="button-browse-gallery">
-                        <Camera className="mr-2 h-4 w-4" />
-                        Gallery
-                      </Button>
-                    </Link>
-                    <Link href="/explore">
-                      <Button variant="outline" className="w-full border-nebula-500 text-nebula-400 hover:bg-nebula-500 hover:text-white" data-testid="button-explore-mars">
-                        Explore
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+
         </div>
       </div>
     </section>
