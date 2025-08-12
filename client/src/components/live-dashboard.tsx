@@ -105,8 +105,10 @@ export function LiveDashboard() {
                 </div>
               )}
               {epicError && (
-                <div className="text-center py-8 text-red-400" data-testid="epic-error">
-                  Failed to load EPIC data
+                <div className="text-center py-8" data-testid="epic-error">
+                  <Globe className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-400 mb-2">EPIC service temporarily unavailable</p>
+                  <p className="text-xs text-gray-500">NASA's EPIC camera data will be restored shortly</p>
                 </div>
               )}
               {epic && (
