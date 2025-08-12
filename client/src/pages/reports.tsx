@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FileText, Download, Check } from "lucide-react";
 import { nasaApi } from "@/lib/nasa-api";
 import { useToast } from "@/hooks/use-toast";
+import jsPDF from 'jspdf';
 
 export default function Reports() {
   const [reportTitle, setReportTitle] = useState("NASA Space Data Report - " + new Date().toLocaleDateString());
@@ -53,55 +54,78 @@ export default function Reports() {
       // Simulate PDF generation
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      // Create a simple text report (in a real app, you'd use a PDF library)
-      let reportContent = `${reportTitle}\n\n`;
-      reportContent += `Generated on: ${new Date().toLocaleString()}\n`;
-      reportContent += `Date Range: ${startDate || 'Latest'} to ${endDate || 'Latest'}\n\n`;
+      // Create PDF using jsPDF
+      const pdf = new jsPDF();
+      let yPosition = 20;
+      
+      // Add title
+      pdf.setFontSize(18);
+      pdf.text(reportTitle, 20, yPosition);
+      yPosition += 20;
+      
+      // Add metadata
+      pdf.setFontSize(12);
+      pdf.text(`Generated on: ${new Date().toLocaleString()}`, 20, yPosition);
+      yPosition += 10;
+      pdf.text(`Date Range: ${startDate || 'Latest'} to ${endDate || 'Latest'}`, 20, yPosition);
+      yPosition += 20;
       
       if (includeApod && apod) {
-        reportContent += `ASTRONOMY PICTURE OF THE DAY\n`;
-        reportContent += `Date: ${apod.date}\n`;
-        reportContent += `Title: ${apod.title}\n`;
-        reportContent += `Description: ${apod.explanation}\n\n`;
+        pdf.setFontSize(14);
+        pdf.text('ASTRONOMY PICTURE OF THE DAY', 20, yPosition);
+        yPosition += 10;
+        pdf.setFontSize(10);
+        pdf.text(`Date: ${apod.date}`, 20, yPosition);
+        yPosition += 7;
+        pdf.text(`Title: ${apod.title}`, 20, yPosition);
+        yPosition += 7;
+        
+        // Split long description into multiple lines
+        const splitDescription = pdf.splitTextToSize(`Description: ${apod.explanation}`, 170);
+        pdf.text(splitDescription, 20, yPosition);
+        yPosition += splitDescription.length * 5 + 10;
       }
       
       if (includeEpic && epic) {
-        reportContent += `EPIC EARTH IMAGE\n`;
-        reportContent += `Date: ${epic.date}\n`;
-        reportContent += `Coordinates: ${epic.centroid_coordinates.lat}°N, ${epic.centroid_coordinates.lon}°W\n\n`;
+        if (yPosition > 250) {
+          pdf.addPage();
+          yPosition = 20;
+        }
+        pdf.setFontSize(14);
+        pdf.text('EPIC EARTH IMAGE', 20, yPosition);
+        yPosition += 10;
+        pdf.setFontSize(10);
+        pdf.text(`Date: ${epic.date}`, 20, yPosition);
+        yPosition += 7;
+        pdf.text(`Coordinates: ${epic.centroid_coordinates.lat}°N, ${epic.centroid_coordinates.lon}°W`, 20, yPosition);
+        yPosition += 15;
       }
       
       if (includeNeo && neos) {
-        reportContent += `NEAR EARTH OBJECTS\n`;
-        reportContent += `Count: ${neos.length}\n`;
+        if (yPosition > 220) {
+          pdf.addPage();
+          yPosition = 20;
+        }
+        pdf.setFontSize(14);
+        pdf.text('NEAR EARTH OBJECTS', 20, yPosition);
+        yPosition += 10;
+        pdf.setFontSize(10);
+        pdf.text(`Count: ${neos.length}`, 20, yPosition);
+        yPosition += 10;
+        
         neos.slice(0, 5).forEach(neo => {
-          reportContent += `- ${neo.name}: ${neo.close_approach_data[0]?.miss_distance.kilometers || 'Unknown'} km\n`;
+          pdf.text(`- ${neo.name}: ${neo.close_approach_data[0]?.miss_distance.kilometers || 'Unknown'} km`, 20, yPosition);
+          yPosition += 7;
         });
-        reportContent += `\n`;
+        yPosition += 10;
       }
       
-      if (includeMars && marsPhoto) {
-        reportContent += `MARS ROVER PHOTO\n`;
-        reportContent += `Rover: ${marsPhoto.rover.name}\n`;
-        reportContent += `Sol: ${marsPhoto.sol}\n`;
-        reportContent += `Camera: ${marsPhoto.camera.name}\n`;
-        reportContent += `Earth Date: ${marsPhoto.earth_date}\n\n`;
-      }
-      
-      // Download as text file
-      const blob = new Blob([reportContent], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `nasa-report-${new Date().toISOString().split('T')[0]}.txt`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      // Download as PDF
+      pdf.save(`nasa-report-${new Date().toISOString().split('T')[0]}.pdf`);
       
       toast({
         title: "Report Generated",
-        description: "Your NASA data report has been downloaded successfully.",
+        description: "Your NASA data report has been downloaded as PDF successfully.",
       });
       
     } catch (error) {
@@ -173,7 +197,7 @@ export default function Reports() {
                     <Checkbox
                       id="apod"
                       checked={includeApod}
-                      onCheckedChange={setIncludeApod}
+                      onCheckedChange={(checked) => setIncludeApod(checked === true)}
                       className="border-gray-600"
                       data-testid="checkbox-include-apod"
                     />
@@ -183,7 +207,7 @@ export default function Reports() {
                     <Checkbox
                       id="epic"
                       checked={includeEpic}
-                      onCheckedChange={setIncludeEpic}
+                      onCheckedChange={(checked) => setIncludeEpic(checked === true)}
                       className="border-gray-600"
                       data-testid="checkbox-include-epic"
                     />
@@ -193,7 +217,7 @@ export default function Reports() {
                     <Checkbox
                       id="neo"
                       checked={includeNeo}
-                      onCheckedChange={setIncludeNeo}
+                      onCheckedChange={(checked) => setIncludeNeo(checked === true)}
                       className="border-gray-600"
                       data-testid="checkbox-include-neo"
                     />
@@ -203,7 +227,7 @@ export default function Reports() {
                     <Checkbox
                       id="mars"
                       checked={includeMars}
-                      onCheckedChange={setIncludeMars}
+                      onCheckedChange={(checked) => setIncludeMars(checked === true)}
                       className="border-gray-600"
                       data-testid="checkbox-include-mars"
                     />
@@ -223,7 +247,7 @@ export default function Reports() {
                 ) : (
                   <>
                     <Download className="mr-2 h-4 w-4" />
-                    Generate Report
+                    Generate PDF Report
                   </>
                 )}
               </Button>

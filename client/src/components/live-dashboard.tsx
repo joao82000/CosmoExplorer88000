@@ -189,9 +189,7 @@ export function LiveDashboard() {
                   ))}
                 </div>
               )}
-              <Button variant="ghost" className="mt-4 w-full text-cosmic-400 hover:text-cosmic-300" data-testid="button-view-all-neos">
-                View All Objects <ExternalLink className="ml-1 h-4 w-4" />
-              </Button>
+
             </CardContent>
           </Card>
 
