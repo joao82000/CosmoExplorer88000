@@ -8,7 +8,7 @@ import { Navigation } from "@/components/navigation";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Explore from "@/pages/explore";
-import Gallery from "@/pages/gallery";
+
 import Reports from "@/pages/reports";
 
 function Router() {
@@ -18,7 +18,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Home} />
         <Route path="/explore" component={Explore} />
-        <Route path="/gallery" component={Gallery} />
+
         <Route path="/reports" component={Reports} />
         <Route component={NotFound} />
       </Switch>

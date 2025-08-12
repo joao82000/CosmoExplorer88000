@@ -1,17 +1,14 @@
 import { Link, useLocation } from "wouter";
-import { Rocket, Moon, Sun, Menu } from "lucide-react";
-import { useTheme } from "./theme-provider";
+import { Rocket, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export function Navigation() {
   const [location] = useLocation();
-  const { theme, setTheme } = useTheme();
 
   const navItems = [
     { href: "/", label: "Dashboard" },
     { href: "/explore", label: "Explore" },
-    { href: "/gallery", label: "Gallery" },
     { href: "/reports", label: "Reports" },
   ];
 
@@ -48,20 +45,6 @@ export function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="hover:bg-gray-800 transition-colors duration-200"
-              data-testid="theme-toggle"
-            >
-              {theme === "dark" ? (
-                <Sun className="h-5 w-5 text-nebula-400" />
-              ) : (
-                <Moon className="h-5 w-5 text-nebula-400" />
-              )}
-            </Button>
-            
             <Sheet>
               <SheetTrigger asChild>
                 <Button
