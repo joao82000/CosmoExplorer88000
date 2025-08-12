@@ -33,6 +33,15 @@ The frontend follows a component-based architecture with reusable UI components 
 - **Mars Rover Photos API**: Images from NASA's Mars rovers
 - **Near Earth Objects API**: Asteroid and comet tracking data
 
+### Enhanced Features (August 2025)
+- **Space Facts Component**: Rotating educational content about space phenomena
+- **Asteroid Tracker**: Real-time Near Earth Object monitoring with risk assessment
+- **NASA Missions Timeline**: Current and upcoming space exploration missions
+- **Space Weather Monitor**: Simulated real-time solar activity and geomagnetic conditions
+- **Exoplanet Spotlight**: Featured exoplanets with habitability assessments
+- **Curiosity Corner**: Interactive Q&A component with space trivia and facts
+- **PDF Report Generation**: Enhanced reports with embedded NASA images using jsPDF
+
 ### Database
 - **PostgreSQL**: Primary database for data persistence
 - **Neon Database**: Cloud PostgreSQL provider (based on connection string pattern)

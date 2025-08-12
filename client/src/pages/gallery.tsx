@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Camera, Info, Calendar, MapPin } from "lucide-react";
 import { nasaApi } from "@/lib/nasa-api";
 import { MarsRoverPhoto } from "@shared/schema";
+import { CuriosityCorner } from "@/components/curiosity-corner";
 
 export default function Gallery() {
   const [selectedRover, setSelectedRover] = useState("perseverance");
@@ -170,6 +171,11 @@ export default function Gallery() {
             ))}
           </div>
         )}
+
+        {/* Curiosity Corner */}
+        <div className="mt-12 mb-8">
+          <CuriosityCorner />
+        </div>
 
         {/* Load More */}
         {photos && photos.length > 0 && (

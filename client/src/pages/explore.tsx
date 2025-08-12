@@ -8,6 +8,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, Search } from "lucide-react";
 import { nasaApi } from "@/lib/nasa-api";
+import { SpaceWeather } from "@/components/space-weather";
+import { ExoplanetSpotlight } from "@/components/exoplanet-spotlight";
+import { NASAMissions } from "@/components/nasa-missions";
 
 export default function Explore() {
   const [apodDate, setApodDate] = useState("");
@@ -38,6 +41,23 @@ export default function Explore() {
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold mb-4" data-testid="explore-title">Explore Space Data</h1>
           <p className="text-gray-400 text-lg" data-testid="explore-subtitle">Discover astronomy pictures from NASA's archives</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+          {/* Space Weather */}
+          <div className="lg:col-span-1">
+            <SpaceWeather />
+          </div>
+          
+          {/* Exoplanet Spotlight */}
+          <div className="lg:col-span-1">
+            <ExoplanetSpotlight />
+          </div>
+          
+          {/* NASA Missions */}
+          <div className="lg:col-span-1">
+            <NASAMissions />
+          </div>
         </div>
 
         <div className="grid grid-cols-1 gap-8 mb-12">
