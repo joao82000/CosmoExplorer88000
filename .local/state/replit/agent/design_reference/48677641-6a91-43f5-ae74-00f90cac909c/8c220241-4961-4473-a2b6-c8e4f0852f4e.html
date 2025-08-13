@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Explorer - Real Space Data Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'space': {
+                            50: '#f0f9ff',
+                            900: '#0f172a',
+                            950: '#020617'
+                        },
+                        'cosmic': {
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af'
+                        },
+                        'nebula': {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706'
+                        }
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'fade-in': 'fadeIn 0.5s ease-in-out'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-effect {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa, #fbbf24);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .space-bg {
+            background: radial-gradient(ellipse at center, #1e40af 0%, #0f172a 45%, #020617 100%);
+        }
+    </style>
+</head>
+<body class="bg-space-950 text-white font-inter overflow-x-hidden">
+    <!-- @COMPONENT: NavigationHeader -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glass-effect">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-rocket text-2xl text-nebula-500"></i>
+                    <h1 class="text-xl font-bold gradient-text">NASA Explorer</h1>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#dashboard" class="text-gray-300 hover:text-white transition-colors duration-200">Dashboard</a>
+                    <a href="#explore" class="text-gray-300 hover:text-white transition-colors duration-200">Explore</a>
+                    <a href="#gallery" class="text-gray-300 hover:text-white transition-colors duration-200">Gallery</a>
+                    <a href="#reports" class="text-gray-300 hover:text-white transition-colors duration-200">Reports</a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- @FUNCTIONALITY: Dark mode toggle with localStorage persistence -->
+                    <button data-event="click:toggleDarkMode" class="p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
+                        <i class="fas fa-moon text-nebula-400"></i>
+                    </button>
+                    
+                    <button class="md:hidden p-2 rounded-lg hover:bg-gray-800 transition-colors duration-200">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: NavigationHeader -->
+
+    <!-- @COMPONENT: HeroSection -->
+    <section class="pt-20 pb-12 space-bg relative overflow-hidden">
+        <div class="absolute inset-0 opacity-20">
+            <!-- A stunning view of Earth from space showing blue oceans and white clouds -->
+            <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080" 
+                 alt="Earth from space" 
+                 class="w-full h-full object-cover" />
+        </div>
+        
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="animate-fade-in">
+                <h2 class="text-4xl md:text-6xl font-bold mb-6">
+                    Explore the <span class="gradient-text">Universe</span>
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+                    Real-time data from NASA's most advanced space missions and Earth observation systems
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    <button class="bg-cosmic-600 hover:bg-cosmic-700 text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105">
+                        <i class="fas fa-play mr-2"></i>
+                        Start Exploring
+                    </button>
+                    <button class="border border-nebula-500 text-nebula-400 hover:bg-nebula-500 hover:text-white px-8 py-3 rounded-lg font-semibold transition-all duration-200">
+                        <i class="fas fa-file-pdf mr-2"></i>
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: HeroSection -->
+
+    <!-- @COMPONENT: LiveDataDashboard -->
+    <section id="dashboard" class="py-16 bg-space-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl md:text-4xl font-bold mb-4">Live NASA Data</h3>
+                <p class="text-gray-400 text-lg">Updated in real-time from NASA's public APIs</p>
+            </div>
+
+            <!-- @STATE: apodData, epicData, neoData, marsData loaded from NASA APIs -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <!-- APOD Card -->
+                <div class="glass-effect rounded-xl p-6 hover:bg-opacity-80 transition-all duration-300 animate-fade-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-xl font-semibold text-nebula-400">
+                            <i class="fas fa-image mr-2"></i>
+                            Astronomy Picture of the Day
+                        </h4>
+                        <span class="text-sm text-gray-400" data-bind="apod.date">2024-01-15</span>
+                    </div>
+                    
+                    <div class="aspect-video rounded-lg overflow-hidden mb-4">
+                        <!-- Spectacular nebula with vibrant colors and cosmic dust clouds -->
+                        <img src="https://images.unsplash.com/photo-1502134249126-9f3755a50d78?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450" 
+                             alt="Astronomy Picture of the Day" 
+                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
+                             data-mock="true" />
+                    </div>
+                    
+                    <h5 class="font-semibold mb-2" data-bind="apod.title">The Rosette Nebula</h5>
+                    <p class="text-gray-300 text-sm line-clamp-3" data-bind="apod.explanation">
+                        The Rosette Nebula is a large spherical H II region located near one end of a giant molecular cloud in the Monoceros region of the Milky Way Galaxy...
+                    </p>
+                    
+                    <button class="mt-4 text-cosmic-400 hover:text-cosmic-300 text-sm font-semibold transition-colors duration-200">
+                        Read More <i class="fas fa-arrow-right ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- EPIC Earth Card -->
+                <div class="glass-effect rounded-xl p-6 hover:bg-opacity-80 transition-all duration-300 animate-fade-in">
+                    <div class="flex items-center justify-between mb-4">
+                        <h4 class="text-xl font-semibold text-nebula-400">
+                            <i class="fas fa-globe mr-2"></i>
+                            Latest Earth Image (EPIC)
+                        </h4>
+                        <span class="text-sm text-gray-400" data-bind="epic.date">Today</span>
+                    </div>
+                    
+                    <div class="aspect-square rounded-lg overflow-hidden mb-4">
+                        <!-- Full disk view of Earth showing continents and cloud formations from space -->
+                        <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=800" 
+                             alt="EPIC Earth view" 
+                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500 animate-float" 
+                             data-mock="true" />
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-400">Coordinates:</span>
+                            <p class="font-semibold" data-bind="epic.coords">0°N, 0°W</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-400">Distance:</span>
+                            <p class="font-semibold" data-bind="epic.distance">1.5M km</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Near Earth Objects -->
+                <div class="glass-effect rounded-xl p-6 hover:bg-opacity-80 transition-all duration-300 animate-fade-in">
+                    <h4 class="text-xl font-semibold text-nebula-400 mb-4">
+                        <i class="fas fa-meteor mr-2"></i>
+                        Near Earth Objects
+                    </h4>
+                    
+                    <!-- @MAP: neoData.map(neo => ( -->
+                    <div class="space-y-3" data-mock="true">
+                        <div class="flex items-center justify-between p-3 bg-space-900 rounded-lg">
+                            <div>
+                                <h5 class="font-semibold" data-bind="neo.name">2023 DW</h5>
+                                <p class="text-sm text-gray-400" data-bind="neo.date">Jan 15, 2024</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-cosmic-400" data-bind="neo.distance">4.2M km</p>
+                                <p class="text-xs text-gray-400" data-bind="neo.size">~150m</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-space-900 rounded-lg">
+                            <div>
+                                <h5 class="font-semibold" data-bind="neo.name">2023 BU</h5>
+                                <p class="text-sm text-gray-400" data-bind="neo.date">Jan 14, 2024</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-cosmic-400" data-bind="neo.distance">2.1M km</p>
+                                <p class="text-xs text-gray-400" data-bind="neo.size">~80m</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between p-3 bg-space-900 rounded-lg">
+                            <div>
+                                <h5 class="font-semibold" data-bind="neo.name">2023 CX1</h5>
+                                <p class="text-sm text-gray-400" data-bind="neo.date">Jan 13, 2024</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-semibold text-cosmic-400" data-bind="neo.distance">6.8M km</p>
+                                <p class="text-xs text-gray-400" data-bind="neo.size">~200m</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_MAP )) -->
+                    
+                    <button class="mt-4 w-full text-cosmic-400 hover:text-cosmic-300 text-sm font-semibold transition-colors duration-200">
+                        View All Objects <i class="fas fa-external-link-alt ml-1"></i>
+                    </button>
+                </div>
+
+                <!-- Mars Rover Photos -->
+                <div class="glass-effect rounded-xl p-6 hover:bg-opacity-80 transition-all duration-300 animate-fade-in">
+                    <h4 class="text-xl font-semibold text-nebula-400 mb-4">
+                        <i class="fas fa-robot mr-2"></i>
+                        Latest Mars Rover Photo
+                    </h4>
+                    
+                    <div class="aspect-video rounded-lg overflow-hidden mb-4">
+                        <!-- Rocky Martian landscape with red soil and distant mountains -->
+                        <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=450" 
+                             alt="Mars rover photo" 
+                             class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" 
+                             data-mock="true" />
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+                        <div>
+                            <span class="text-gray-400">Rover:</span>
+                            <p class="font-semibold" data-bind="mars.rover">Perseverance</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-400">Sol:</span>
+                            <p class="font-semibold" data-bind="mars.sol">1024</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-400">Camera:</span>
+                            <p class="font-semibold" data-bind="mars.camera">MAST</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-400">Date:</span>
+                            <p class="font-semibold" data-bind="mars.earth_date">Jan 15, 2024</p>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-cosmic-600 hover:bg-cosmic-700 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
+                        <i class="fas fa-images mr-2"></i>
+                        Browse Gallery
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: LiveDataDashboard -->
+
+    <!-- @COMPONENT: InteractiveExploration -->
+    <section id="explore" class="py-16 bg-gradient-to-b from-space-950 to-space-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl md:text-4xl font-bold mb-4">Interactive Exploration</h3>
+                <p class="text-gray-400 text-lg">Dive deep into NASA's data with advanced search and filtering</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- APOD Search -->
+                <div class="glass-effect rounded-xl p-6 hover:bg-opacity-80 transition-all duration-300">
+                    <h4 class="text-xl font-semibold text-nebula-400 mb-4">
+                        <i class="fas fa-calendar-alt mr-2"></i>
+                        APOD Time Machine
+                    </h4>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Select Date</label>
+                            <input type="date" 
+                                   class="w-full bg-space-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                   data-event="change:searchAPOD"
+                                   data-mock="true" />
+                        </div>
+                        
+                        <button class="w-full bg-nebula-500 hover:bg-nebula-600 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
+                            <i class="fas fa-search mr-2"></i>
+                            Explore Date
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-space-900 rounded-lg">
+                        <p class="text-xs text-gray-400">Search through NASA's archive dating back to June 16, 1995</p>
+                    </div>
+                </div>
+
+                <!-- Mars Rover Gallery -->
+                <div class="glass-effect rounded-xl p-6 hover:bg-opacity-80 transition-all duration-300">
+                    <h4 class="text-xl font-semibold text-nebula-400 mb-4">
+                        <i class="fas fa-camera mr-2"></i>
+                        Mars Photo Gallery
+                    </h4>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Rover</label>
+                            <select class="w-full bg-space-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                    data-event="change:filterRover"
+                                    data-mock="true">
+                                <option>All Rovers</option>
+                                <option>Perseverance</option>
+                                <option>Curiosity</option>
+                                <option>Opportunity</option>
+                                <option>Spirit</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Camera</label>
+                            <select class="w-full bg-space-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                    data-event="change:filterCamera"
+                                    data-mock="true">
+                                <option>All Cameras</option>
+                                <option>MAST</option>
+                                <option>NAVCAM</option>
+                                <option>FHAZ</option>
+                                <option>RHAZ</option>
+                            </select>
+                        </div>
+                        
+                        <button class="w-full bg-nebula-500 hover:bg-nebula-600 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
+                            <i class="fas fa-filter mr-2"></i>
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Earth Data Explorer -->
+                <div class="glass-effect rounded-xl p-6 hover:bg-opacity-80 transition-all duration-300">
+                    <h4 class="text-xl font-semibold text-nebula-400 mb-4">
+                        <i class="fas fa-map-marked-alt mr-2"></i>
+                        Earth Data Explorer
+                    </h4>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Latitude</label>
+                            <input type="number" 
+                                   step="0.1" 
+                                   placeholder="e.g. 40.7128"
+                                   class="w-full bg-space-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                   data-event="input:updateCoords"
+                                   data-mock="true" />
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Longitude</label>
+                            <input type="number" 
+                                   step="0.1" 
+                                   placeholder="e.g. -74.0060"
+                                   class="w-full bg-space-900 border border-gray-600 rounded-lg px-3 py-2 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                   data-event="input:updateCoords"
+                                   data-mock="true" />
+                        </div>
+                        
+                        <button class="w-full bg-nebula-500 hover:bg-nebula-600 text-white py-2 rounded-lg font-semibold transition-colors duration-200">
+                            <i class="fas fa-satellite mr-2"></i>
+                            Get Earth Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: InteractiveExploration -->
+
+    <!-- @COMPONENT: InteractiveMap -->
+    <section class="py-16 bg-space-950">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h3 class="text-3xl md:text-4xl font-bold mb-4">Global Space Data Map</h3>
+                <p class="text-gray-400 text-lg">Interactive visualization of Earth and space object data</p>
+            </div>
+
+            <!-- @FUNCTIONALITY: Leaflet map with EPIC and NEO data markers -->
+            <div class="glass-effect rounded-xl p-6">
+                <div class="aspect-video bg-space-900 rounded-lg relative overflow-hidden">
+                    <!-- World map showing continents and oceans from satellite perspective -->
+                    <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=675" 
+                         alt="Interactive world map" 
+                         class="w-full h-full object-cover" 
+                         data-mock="true" />
+                    
+                    <!-- Map Controls Overlay -->
+                    <div class="absolute top-4 left-4 space-y-2">
+                        <button class="bg-space-900 bg-opacity-80 p-2 rounded-lg text-white hover:bg-opacity-100 transition-all duration-200">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="bg-space-900 bg-opacity-80 p-2 rounded-lg text-white hover:bg-opacity-100 transition-all duration-200">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Legend -->
+                    <div class="absolute bottom-4 left-4 bg-space-900 bg-opacity-80 p-4 rounded-lg">
+                        <h5 class="font-semibold mb-2">Legend</h5>
+                        <div class="space-y-1 text-sm">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-cosmic-400 rounded-full"></div>
+                                <span>EPIC Image Location</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-nebula-400 rounded-full"></div>
+                                <span>Near Earth Objects</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                                <span>Earth Assets</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sample Markers -->
+                    <div class="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <div class="w-4 h-4 bg-cosmic-400 rounded-full animate-pulse-slow border-2 border-white"></div>
+                    </div>
+                    <div class="absolute top-1/2 left-1/3 transform -translate-x-1/2 -translate-y-1/2">
+                        <div class="w-4 h-4 bg-nebula-400 rounded-full animate-pulse-slow border-2 border-white"></div>
+                    </div>
+                    <div class="absolute bottom-1/3 right-1/3 transform translate-x-1/2 translate-y-1/2">
+                        <div class="w-4 h-4 bg-red-400 rounded-full animate-pulse-slow border-2 border-white"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: InteractiveMap -->
+
+    <!-- @COMPONENT: ReportsSection -->
+    <section id="reports" class="py-16 bg-gradient-to-b from-space-950 to-space-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h3 class="text-3xl md:text-4xl font-bold mb-4">Generate Reports</h3>
+                <p class="text-gray-400 text-lg">Create comprehensive PDF reports with current NASA data</p>
+            </div>
+
+            <div class="max-w-2xl mx-auto">
+                <div class="glass-effect rounded-xl p-8">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-file-pdf text-6xl text-nebula-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold mb-2">NASA Data Report</h4>
+                        <p class="text-gray-400">Generate a comprehensive report with current astronomical data, Earth observations, and space mission updates.</p>
+                    </div>
+
+                    <div class="space-y-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" checked class="form-checkbox h-5 w-5 text-cosmic-500 bg-space-900 border-gray-600 rounded focus:ring-cosmic-500" data-mock="true" />
+                                <span class="text-sm">APOD Data</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" checked class="form-checkbox h-5 w-5 text-cosmic-500 bg-space-900 border-gray-600 rounded focus:ring-cosmic-500" data-mock="true" />
+                                <span class="text-sm">EPIC Images</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" checked class="form-checkbox h-5 w-5 text-cosmic-500 bg-space-900 border-gray-600 rounded focus:ring-cosmic-500" data-mock="true" />
+                                <span class="text-sm">NEO Data</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" checked class="form-checkbox h-5 w-5 text-cosmic-500 bg-space-900 border-gray-600 rounded focus:ring-cosmic-500" data-mock="true" />
+                                <span class="text-sm">Mars Photos</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Report Title</label>
+                            <input type="text" 
+                                   value="NASA Space Data Report - January 2024"
+                                   class="w-full bg-space-900 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                   data-mock="true" />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Date Range</label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <input type="date" 
+                                       class="bg-space-900 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                       data-mock="true" />
+                                <input type="date" 
+                                       class="bg-space-900 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-cosmic-500 focus:outline-none transition-colors duration-200"
+                                       data-mock="true" />
+                            </div>
+                        </div>
+
+                        <button class="w-full bg-gradient-to-r from-cosmic-600 to-nebula-500 hover:from-cosmic-700 hover:to-nebula-600 text-white py-4 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105"
+                                data-event="click:generateReport">
+                            <i class="fas fa-download mr-2"></i>
+                            Generate PDF Report
+                        </button>
+
+                        <div class="bg-space-900 rounded-lg p-4">
+                            <h5 class="font-semibold mb-2 text-nebula-400">Report Contents:</h5>
+                            <ul class="text-sm text-gray-400 space-y-1">
+                                <li>• Current Astronomy Picture of the Day with detailed explanation</li>
+                                <li>• Latest EPIC Earth imagery and observation data</li>
+                                <li>• Near Earth Objects tracking and proximity analysis</li>
+                                <li>• Recent Mars Rover photographs and mission updates</li>
+                                <li>• Interactive charts and data visualizations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- @END_COMPONENT: ReportsSection -->
+
+    <!-- @COMPONENT: Footer -->
+    <footer class="bg-space-950 border-t border-gray-800 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <i class="fas fa-rocket text-2xl text-nebula-500"></i>
+                        <h1 class="text-xl font-bold gradient-text">NASA Explorer</h1>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Exploring the universe through NASA's real-time data APIs. Bringing space exploration to everyone through beautiful, interactive web experiences.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">
+                            <i class="fab fa-linkedin text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold mb-4 text-nebula-400">Explore</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">APOD Archive</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Mars Gallery</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Earth Images</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">NEO Tracker</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h5 class="font-semibold mb-4 text-nebula-400">Resources</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">NASA APIs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Documentation</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">GitHub</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">About</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2024 NASA Explorer. Built with real NASA data APIs. Not affiliated with NASA.</p>
+            </div>
+        </div>
+    </footer>
+    <!-- @END_COMPONENT: Footer -->
+
+    <script>
+        // TODO: Implement React components, state management, and NASA API integration
+        // TODO: Add Framer Motion animations for smooth transitions
+        // TODO: Implement dark mode toggle with localStorage persistence
+        // TODO: Add proper error handling and loading states
+        // TODO: Integrate with backend API endpoints for real NASA data
+        
+        (function() {
+            // Simple demo interactions for the mockup
+            console.log('NASA Explorer - Design Mockup Loaded');
+            
+            // Simulate loading states
+            setTimeout(() => {
+                console.log('NASA API data would be loaded here');
+            }, 1000);
+            
+            // Add smooth scrolling for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
